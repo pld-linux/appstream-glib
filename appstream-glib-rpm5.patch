@@ -1,0 +1,147 @@
+--- appstream-glib-0.2.0/libappstream-builder/Makefile.am.orig	2014-06-19 10:09:35.000000000 +0200
++++ appstream-glib-0.2.0/libappstream-builder/Makefile.am	2014-06-21 22:26:16.105266525 +0200
+@@ -66,6 +66,7 @@
+ 
+ libappstream_builder_la_LIBADD =				\
+ 	$(AS_GLIB_LIBS)						\
++	$(LIBARCHIVE_LIBS)					\
+ 	$(RPM_LIBS)						\
+ 	$(GLIB_LIBS)
+ 
+@@ -76,6 +77,7 @@
+ 	-export-symbols-regex '^asb_.*'
+ 
+ libappstream_builder_la_CFLAGS =				\
++        $(RPM_CFLAGS)						\
+ 	$(WARNINGFLAGS_C)
+ 
+ if HAVE_INTROSPECTION
+@@ -107,11 +109,6 @@
+ 	$(AS_GLIB_LIBS)						\
+ 	libappstream-builder.la					\
+ 	archive
+-if HAVE_RPM
+-AppStreamBuilder_1_0_gir_LIBS +=				\
+-	rpmio 							\
+-	rpm
+-endif
+ AppStreamBuilder_1_0_gir_FILES = $(introspection_sources)
+ INTROSPECTION_GIRS += AppStreamBuilder-1.0.gir
+ 
+--- appstream-glib-0.2.0/libappstream-builder/asb-package-rpm.c.orig	2014-06-21 22:53:36.268565676 +0200
++++ appstream-glib-0.2.0/libappstream-builder/asb-package-rpm.c	2014-06-21 22:56:36.995228569 +0200
+@@ -33,7 +33,7 @@
+ #include <archive.h>
+ #include <archive_entry.h>
+ 
+-#include <rpm/rpmlib.h>
++#include <rpm/rpm46compat.h>
+ #include <rpm/rpmts.h>
+ 
+ #include "as-cleanup.h"
+@@ -229,6 +229,33 @@
+ 	asb_package_set_source (pkg, srcrpm);
+ }
+ 
++static uint64_t rpmtdGetNumber(rpmtd td)
++{
++    uint64_t val = 0;
++    int ix;
++    assert(td != NULL);
++    ix = (td->ix >= 0 ? td->ix : 0);
++
++    switch (td->type) {
++    case RPM_INT64_TYPE:
++	val = *((uint64_t *) td->data + ix);
++	break;
++    case RPM_INT32_TYPE:
++	val = *((uint32_t *) td->data + ix);
++	break;
++    case RPM_INT16_TYPE:
++	val = *((uint16_t *) td->data + ix);
++	break;
++    case RPM_INT8_TYPE:
++    case RPM_CHAR_TYPE:
++	val = *((uint8_t *) td->data + ix);
++	break;
++    default:
++	break;
++    }
++    return val;
++}
++
+ /**
+  * asb_package_rpm_ensure_simple:
+  **/
+@@ -241,7 +268,7 @@
+ 	rpmtd td;
+ 
+ 	/* get the simple stuff */
+-	td = rpmtdNew ();
++	td = malloc (sizeof (*td));
+ 	headerGet (priv->h, RPMTAG_NAME, td, HEADERGET_MINMEM);
+ 	asb_package_set_name (pkg, rpmtdGetString (td));
+ 	headerGet (priv->h, RPMTAG_VERSION, td, HEADERGET_MINMEM);
+@@ -258,7 +285,7 @@
+ 	asb_package_rpm_set_license (pkg, rpmtdGetString (td));
+ 	headerGet (priv->h, RPMTAG_SOURCERPM, td, HEADERGET_MINMEM);
+ 	asb_package_rpm_set_source (pkg, rpmtdGetString (td));
+-	rpmtdFree (td);
++	free (td);
+ 	return ret;
+ }
+ 
+@@ -390,7 +417,7 @@
+ 
+ 	/* read out the file list */
+ 	for (i = 0; i < 3; i++)
+-		td[i] = rpmtdNew ();
++		td[i] = malloc (sizeof (*td[1]));
+ 	/* get the ChangeLog info */
+ 	headerGet (priv->h, RPMTAG_CHANGELOGTIME, td[0], HEADERGET_MINMEM);
+ 	headerGet (priv->h, RPMTAG_CHANGELOGNAME, td[1], HEADERGET_MINMEM);
+@@ -405,7 +432,7 @@
+ 	}
+ 	for (i = 0; i < 3; i++) {
+ 		rpmtdFreeData (td[i]);
+-		rpmtdFree (td[i]);
++		free (td[i]);
+ 	}
+ 	return TRUE;
+ }
+@@ -427,7 +454,7 @@
+ 	_cleanup_strv_free_ gchar **deps = NULL;
+ 
+ 	/* read out the dep list */
+-	td = rpmtdNew ();
++	td = malloc (sizeof (*td));
+ 	rc = headerGet (priv->h, RPMTAG_REQUIRENAME, td, HEADERGET_MINMEM);
+ 	if (!rc) {
+ 		ret = FALSE;
+@@ -455,7 +482,7 @@
+ 	asb_package_set_deps (pkg, deps);
+ out:
+ 	rpmtdFreeData (td);
+-	rpmtdFree (td);
++	free (td);
+ 	return ret;
+ }
+ 
+@@ -477,7 +504,7 @@
+ 
+ 	/* read out the file list */
+ 	for (i = 0; i < 3; i++)
+-		td[i] = rpmtdNew ();
++		td[i] = malloc (sizeof (*td[i]));
+ 	rc = headerGet (priv->h, RPMTAG_DIRNAMES, td[0], HEADERGET_MINMEM);
+ 	if (rc)
+ 		rc = headerGet (priv->h, RPMTAG_BASENAMES, td[1], HEADERGET_MINMEM);
+@@ -512,7 +539,7 @@
+ out:
+ 	for (i = 0; i < 3; i++) {
+ 		rpmtdFreeData (td[i]);
+-		rpmtdFree (td[i]);
++		free (td[i]);
+ 	}
+ 	return ret;
+ }

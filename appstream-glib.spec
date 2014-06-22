@@ -1,22 +1,35 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.1.7
+Version:	0.2.0
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	4779c8b21df42cb0e874478201cee419
+# Source0-md5:	12256fed43fb8de30ddfebec9ff29140
+Patch0:		%{name}-rpm5.patch
+Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
+BuildRequires:	autoconf >= 2.63
+BuildRequires:	automake >= 1:1.9
+BuildRequires:	docbook-dtd43-xml
+BuildRequires:	docbook-style-xsl
+BuildRequires:	freetype-devel >= 2.5
 BuildRequires:	gdk-pixbuf2-devel >= 2.14
+BuildRequires:	gettext-devel >= 0.17
 BuildRequires:	glib2-devel >= 1:2.16.1
 BuildRequires:	gobject-introspection-devel >= 0.9.8
 BuildRequires:	gperf
 BuildRequires:	gtk-doc >= 1.9
+BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	libarchive-devel
 BuildRequires:	libsoup-devel >= 2.24
 BuildRequires:	libstdc++-devel
+BuildRequires:	libtool >= 2:2
+BuildRequires:	libxslt-progs
 BuildRequires:	pkgconfig
+BuildRequires:	rpm-devel >= 4.5
+BuildRequires:	sqlite3-devel
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 Requires:	glib2 >= 1:2.16.1
@@ -73,10 +86,80 @@ API documentation for appstream-glib library.
 %description apidocs -l pl.UTF-8
 Dokumentacja API biblioteki appstream-glib.
 
+%package -n bash-completion-appstream-glib
+Summary:	Bash completion for appstream-glib package
+Summary(pl.UTF-8):	Bashowe dopełnianie składni dla pakietu appstream-glib
+Group:		Applications/Shells
+Requires:	%{name} = %{version}-%{release}
+Requires:	bash-completion >= 2.0
+
+%description -n bash-completion-appstream-glib
+Bash completion for appstream-util command.
+
+%description -n bash-completion-appstream-glib -l pl.UTF-8
+Bashowe dopełnianie składni polecenia appstream-util.
+
+%package -n appstream-builder
+Summary:	AppStreamBuilder library to create AppStream metadata from packages
+Summary(pl.UTF-8):	Biblioteka AppStreamBuilder tworząca metadane AppStream z pakietów
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description -n appstream-builder
+AppStreamBuilder library to create AppStream metadata from packages.
+
+%description -n appstream-builder -l pl.UTF-8
+Biblioteka AppStreamBuilder tworząca metadane AppStream z pakietów.
+
+%package -n appstream-builder-devel
+Summary:	Header files for AppStreamBuilder library
+Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki AppStreamBuilder
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	appstream-builder = %{version}-%{release}
+
+%description -n appstream-builder-devel
+Header files for AppStreamBuilder library.
+
+%description -n appstream-builder-devel -l pl.UTF-8
+Pliki nagłówkowe biblioteki AppStreamBuilder.
+
+%package -n appstream-builder-static
+Summary:	Static AppStreamBuilder library
+Summary(pl.UTF-8):	Statyczna biblioteka AppStreamBuilder
+Group:		Development/Libraries
+Requires:	appstream-builder-devel = %{version}-%{release}
+
+%description -n appstream-builder-static
+Static AppStreamBuilder library.
+
+%description -n appstream-builder-static -l pl.UTF-8
+Statyczna biblioteka AppStreamBuilder.
+
+%package -n bash-completion-appstream-builder
+Summary:	Bash completion for appstream-builder package
+Summary(pl.UTF-8):	Bashowe dopełnianie składni dla pakietu appstream-builder
+Group:		Applications/Shells
+Requires:	appstream-builder = %{version}-%{release}
+Requires:	bash-completion >= 2.0
+
+%description -n bash-completion-appstream-builder
+Bash completion for appstream-builder command.
+
+%description -n bash-completion-appstream-builder -l pl.UTF-8
+Bashowe dopełnianie składni polecenia appstream-builder.
+
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
 
 %build
+%{__libtoolize}
+%{__aclocal} -I m4
+%{__autoconf}
+%{__autoheader}
+%{__automake}
 %configure \
 	--disable-silent-rules \
 	--with-html-dir=%{_gtkdocdir}
@@ -88,14 +171,19 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/asb-plugins/lib*.{la,a}
+
 # obsoleted by pkg-config
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libappstream-glib.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libappstream-*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
+
+%post	-n appstream-builder -p /sbin/ldconfig
+%postun	-n appstream-builder -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
@@ -104,6 +192,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libappstream-glib.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libappstream-glib.so.1
 %{_libdir}/girepository-1.0/AppStreamGlib-1.0.typelib
+%{_mandir}/man1/appstream-util.1*
 
 %files devel
 %defattr(644,root,root,755)
@@ -111,11 +200,52 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gir-1.0/AppStreamGlib-1.0.gir
 %{_includedir}/libappstream-glib
 %{_pkgconfigdir}/appstream-glib.pc
+%{_aclocaldir}/appstream-xml.m4
 
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libappstream-glib.a
 
+%files -n bash-completion-appstream-glib
+%defattr(644,root,root,755)
+%{_datadir}/bash-completion/completions/appstream-util
+
 %files apidocs
 %defattr(644,root,root,755)
 %{_gtkdocdir}/appstream-glib
+
+%files -n appstream-builder
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/appstream-builder
+%attr(755,root,root) %{_libdir}/libappstream-builder.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.1
+%{_libdir}/girepository-1.0/AppStreamBuilder-1.0.typelib
+%dir %{_libdir}/asb-plugins
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_appdata.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_blacklist.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_desktop.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_font.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gettext.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gir.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gstreamer.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_hardcoded.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_ibus_sql.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_ibus_xml.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_metainfo.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_nm.so
+%{_mandir}/man1/appstream-builder.1*
+
+%files -n appstream-builder-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libappstream-builder.so
+%{_includedir}/libappstream-builder
+%{_datadir}/gir-1.0/AppStreamBuilder-1.0.gir
+%{_pkgconfigdir}/appstream-builder.pc
+
+%files -n appstream-builder-static
+%defattr(644,root,root,755)
+%{_libdir}/libappstream-builder.a
+
+%files -n bash-completion-appstream-builder
+%defattr(644,root,root,755)
+%{_datadir}/bash-completion/completions/appstream-builder
