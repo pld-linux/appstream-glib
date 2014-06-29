@@ -1,12 +1,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.2.0
+Version:	0.2.1
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	12256fed43fb8de30ddfebec9ff29140
+# Source0-md5:	e1bd0a1cdd7b2495a8a3b3bab8f193b2
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
