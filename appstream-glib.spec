@@ -1,12 +1,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.2.1
+Version:	0.2.2
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	e1bd0a1cdd7b2495a8a3b3bab8f193b2
+# Source0-md5:	74a14568adc94ae81f2da5ea8f6ca816
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
@@ -14,6 +14,7 @@ BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.9
 BuildRequires:	docbook-dtd43-xml
 BuildRequires:	docbook-style-xsl
+BuildRequires:	fontconfig-devel
 BuildRequires:	freetype-devel >= 2.5
 BuildRequires:	gdk-pixbuf2-devel >= 2.14
 BuildRequires:	gettext-devel >= 0.17
@@ -22,11 +23,13 @@ BuildRequires:	gobject-introspection-devel >= 0.9.8
 BuildRequires:	gperf
 BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	gtk+3-devel >= 3.0
+BuildRequires:	intltool >= 0.40.0
 BuildRequires:	libarchive-devel
 BuildRequires:	libsoup-devel >= 2.24
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libxslt-progs
+BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-devel >= 4.5
 BuildRequires:	sqlite3-devel
@@ -176,6 +179,8 @@ rm -rf $RPM_BUILD_ROOT
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libappstream-*.la
 
+%find_lang %{name}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -185,7 +190,7 @@ rm -rf $RPM_BUILD_ROOT
 %post	-n appstream-builder -p /sbin/ldconfig
 %postun	-n appstream-builder -p /sbin/ldconfig
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS MAINTAINERS NEWS README.md
 %attr(755,root,root) %{_bindir}/appstream-util
@@ -221,6 +226,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.1
 %{_libdir}/girepository-1.0/AppStreamBuilder-1.0.typelib
 %dir %{_libdir}/asb-plugins
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_absorb.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_appdata.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_blacklist.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_desktop.so
@@ -231,6 +237,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_hardcoded.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_ibus_sql.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_ibus_xml.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_kde_notifyrc.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_kde_services.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_metainfo.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_nm.so
 %{_mandir}/man1/appstream-builder.1*
