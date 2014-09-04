@@ -1,12 +1,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.2.3
+Version:	0.2.6
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	b2121d03fd2e04f39cf999b4eee2643e
+# Source0-md5:	2a86155462ef49747ca6f27f857aa1a9
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
@@ -229,10 +229,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_absorb.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_appdata.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_blacklist.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_dbus.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_desktop.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_font.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gettext.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gir.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gresource.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gstreamer.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_hardcoded.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_ibus_sql.so

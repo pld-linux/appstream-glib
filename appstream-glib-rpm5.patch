@@ -28,8 +28,8 @@
  AppStreamBuilder_1_0_gir_FILES = $(introspection_sources)
  INTROSPECTION_GIRS += AppStreamBuilder-1.0.gir
  
---- appstream-glib-0.2.0/libappstream-builder/asb-package-rpm.c.orig	2014-06-21 22:53:36.268565676 +0200
-+++ appstream-glib-0.2.0/libappstream-builder/asb-package-rpm.c	2014-06-21 22:56:36.995228569 +0200
+--- appstream-glib-0.2.6/libappstream-builder/asb-package-rpm.c.orig	2014-09-01 15:57:32.000000000 +0200
++++ appstream-glib-0.2.6/libappstream-builder/asb-package-rpm.c	2014-09-04 16:55:26.028784594 +0200
 @@ -33,7 +33,7 @@
  #include <archive.h>
  #include <archive_entry.h>
@@ -39,8 +39,8 @@
  #include <rpm/rpmts.h>
  
  #include "as-cleanup.h"
-@@ -229,6 +229,33 @@
- 	asb_package_set_source (pkg, srcrpm);
+@@ -239,6 +239,36 @@ asb_package_rpm_set_source (AsbPackage *
+ 	asb_package_set_source_pkgname (pkg, srcrpm);
  }
  
 +static uint64_t rpmtdGetNumber(rpmtd td)
@@ -70,10 +70,13 @@
 +    return val;
 +}
 +
++#define _RPMVSF_NOSIGNATURES (RPMVSF_NODSAHEADER | RPMVSF_NORSAHEADER | RPMVSF_NODSA | RPMVSF_NORSA)
++#define	_RPMVSF_NODIGESTS (RPMVSF_NOSHA1HEADER | RPMVSF_NOMD5HEADER | RPMVSF_NOSHA1 | RPMVSF_NOMD5)
++
  /**
   * asb_package_rpm_ensure_simple:
   **/
-@@ -241,7 +268,7 @@
+@@ -251,7 +281,7 @@ asb_package_rpm_ensure_simple (AsbPackag
  	rpmtd td;
  
  	/* get the simple stuff */
@@ -82,7 +85,7 @@
  	headerGet (priv->h, RPMTAG_NAME, td, HEADERGET_MINMEM);
  	asb_package_set_name (pkg, rpmtdGetString (td));
  	headerGet (priv->h, RPMTAG_VERSION, td, HEADERGET_MINMEM);
-@@ -258,7 +285,7 @@
+@@ -268,7 +298,7 @@ asb_package_rpm_ensure_simple (AsbPackag
  	asb_package_rpm_set_license (pkg, rpmtdGetString (td));
  	headerGet (priv->h, RPMTAG_SOURCERPM, td, HEADERGET_MINMEM);
  	asb_package_rpm_set_source (pkg, rpmtdGetString (td));
@@ -91,7 +94,7 @@
  	return ret;
  }
  
-@@ -390,7 +417,7 @@
+@@ -341,7 +371,7 @@ asb_package_rpm_ensure_releases (AsbPack
  
  	/* read out the file list */
  	for (i = 0; i < 3; i++)
@@ -100,7 +103,7 @@
  	/* get the ChangeLog info */
  	headerGet (priv->h, RPMTAG_CHANGELOGTIME, td[0], HEADERGET_MINMEM);
  	headerGet (priv->h, RPMTAG_CHANGELOGNAME, td[1], HEADERGET_MINMEM);
-@@ -405,7 +432,7 @@
+@@ -356,7 +386,7 @@ asb_package_rpm_ensure_releases (AsbPack
  	}
  	for (i = 0; i < 3; i++) {
  		rpmtdFreeData (td[i]);
@@ -109,7 +112,7 @@
  	}
  	return TRUE;
  }
-@@ -427,7 +454,7 @@
+@@ -378,7 +408,7 @@ asb_package_rpm_ensure_deps (AsbPackage
  	_cleanup_strv_free_ gchar **deps = NULL;
  
  	/* read out the dep list */
@@ -118,7 +121,7 @@
  	rc = headerGet (priv->h, RPMTAG_REQUIRENAME, td, HEADERGET_MINMEM);
  	if (!rc) {
  		ret = FALSE;
-@@ -455,7 +482,7 @@
+@@ -406,7 +436,7 @@ asb_package_rpm_ensure_deps (AsbPackage
  	asb_package_set_deps (pkg, deps);
  out:
  	rpmtdFreeData (td);
@@ -127,7 +130,7 @@
  	return ret;
  }
  
-@@ -477,7 +504,7 @@
+@@ -428,7 +458,7 @@ asb_package_rpm_ensure_filelists (AsbPac
  
  	/* read out the file list */
  	for (i = 0; i < 3; i++)
@@ -136,7 +139,7 @@
  	rc = headerGet (priv->h, RPMTAG_DIRNAMES, td[0], HEADERGET_MINMEM);
  	if (rc)
  		rc = headerGet (priv->h, RPMTAG_BASENAMES, td[1], HEADERGET_MINMEM);
-@@ -512,7 +539,7 @@
+@@ -463,7 +493,7 @@ asb_package_rpm_ensure_filelists (AsbPac
  out:
  	for (i = 0; i < 3; i++) {
  		rpmtdFreeData (td[i]);
