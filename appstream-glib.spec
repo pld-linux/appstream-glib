@@ -15,7 +15,8 @@ BuildRequires:	automake >= 1:1.9
 BuildRequires:	docbook-dtd43-xml
 BuildRequires:	docbook-style-xsl
 BuildRequires:	fontconfig-devel
-BuildRequires:	freetype-devel >= 2.5
+# pkgconfig(freetype2) >= 9.10.0
+BuildRequires:	freetype-devel >= 1:2.2.1
 BuildRequires:	gdk-pixbuf2-devel >= 2.14
 BuildRequires:	gettext-devel >= 0.17
 BuildRequires:	glib2-devel >= 1:2.16.1
@@ -107,6 +108,7 @@ Summary:	AppStreamBuilder library to create AppStream metadata from packages
 Summary(pl.UTF-8):	Biblioteka AppStreamBuilder tworząca metadane AppStream z pakietów
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	freetype >= 1:2.2.1
 
 %description -n appstream-builder
 AppStreamBuilder library to create AppStream metadata from packages.
