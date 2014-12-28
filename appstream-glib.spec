@@ -18,7 +18,7 @@ BuildRequires:	fontconfig-devel
 # pkgconfig(freetype2) >= 9.10.0
 BuildRequires:	freetype-devel >= 1:2.2.1
 BuildRequires:	gdk-pixbuf2-devel >= 2.14
-BuildRequires:	gettext-devel >= 0.17
+BuildRequires:	gettext-tools >= 0.17
 BuildRequires:	glib2-devel >= 1:2.16.1
 BuildRequires:	gobject-introspection-devel >= 0.9.8
 BuildRequires:	gperf
