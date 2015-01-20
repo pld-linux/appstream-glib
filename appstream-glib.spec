@@ -1,12 +1,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.3.0
+Version:	0.3.4
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	f4be91093be4d43856258766684e7744
+# Source0-md5:	b3652e289d5fade9efbc07b9eabff488
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
@@ -39,6 +39,8 @@ BuildRequires:	xz
 Requires:	glib2 >= 1:2.16.1
 Requires:	gdk-pixbuf2 >= 2.14
 Requires:	libsoup >= 2.24
+Provides:	appdata-tools = %{version}
+Obsoletes:	appdata-tools < 0.2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -195,10 +197,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS MAINTAINERS NEWS README.md
+%attr(755,root,root) %{_bindir}/appdata-validate
 %attr(755,root,root) %{_bindir}/appstream-util
 %attr(755,root,root) %{_libdir}/libappstream-glib.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libappstream-glib.so.7
 %{_libdir}/girepository-1.0/AppStreamGlib-1.0.typelib
+%{_aclocaldir}/appdata-xml.m4
 %{_mandir}/man1/appstream-util.1*
 
 %files devel
