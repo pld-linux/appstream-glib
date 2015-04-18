@@ -1,15 +1,21 @@
+#
+# Conditional build:
+%bcond_without	ostree	# ostree support
+%bcond_with	alpm	# Arch Linux PacMan support
+#
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.2.8
-Release:	3
+Version:	0.3.6
+Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	6c3f40696411945dee67d3a1b411c2a4
+# Source0-md5:	854085e5216120b9843d680e97f1fb63
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
+%{?with_alpm:BuildRequires:	alpm-devel}
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.9
 BuildRequires:	docbook-dtd43-xml
@@ -17,6 +23,7 @@ BuildRequires:	docbook-style-xsl
 BuildRequires:	fontconfig-devel
 # pkgconfig(freetype2) >= 9.10.0
 BuildRequires:	freetype-devel >= 1:2.2.1
+BuildRequires:	gcab
 BuildRequires:	gdk-pixbuf2-devel >= 2.14
 BuildRequires:	gettext-tools >= 0.17
 BuildRequires:	glib2-devel >= 1:2.16.1
@@ -30,15 +37,19 @@ BuildRequires:	libsoup-devel >= 2.24
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libxslt-progs
+%{?with_ostree:BuildRequires:	ostree-devel >= 2015.1}
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-devel >= 4.5
-BuildRequires:	sqlite3-devel
+BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
+BuildRequires:	yaml-devel
 Requires:	glib2 >= 1:2.16.1
 Requires:	gdk-pixbuf2 >= 2.14
 Requires:	libsoup >= 2.24
+Provides:	appdata-tools = %{version}
+Obsoletes:	appdata-tools < 0.2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -166,6 +177,8 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 %{__autoheader}
 %{__automake}
 %configure \
+	%{?with_alpm:--enable-alpm} \
+	%{!?with_ostree:--disable-ostree} \
 	--disable-silent-rules \
 	--with-html-dir=%{_gtkdocdir}
 %{__make}
@@ -195,10 +208,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS MAINTAINERS NEWS README.md
+%attr(755,root,root) %{_bindir}/appdata-validate
 %attr(755,root,root) %{_bindir}/appstream-util
 %attr(755,root,root) %{_libdir}/libappstream-glib.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libappstream-glib.so.1
+%attr(755,root,root) %ghost %{_libdir}/libappstream-glib.so.7
 %{_libdir}/girepository-1.0/AppStreamGlib-1.0.typelib
+%{_aclocaldir}/appdata-xml.m4
 %{_mandir}/man1/appstream-util.1*
 
 %files devel
@@ -225,7 +240,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/appstream-builder
 %attr(755,root,root) %{_libdir}/libappstream-builder.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.1
+%attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.7
 %{_libdir}/girepository-1.0/AppStreamBuilder-1.0.typelib
 %dir %{_libdir}/asb-plugins
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_absorb.so
@@ -233,6 +248,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_blacklist.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_dbus.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_desktop.so
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_firmware.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_font.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gettext.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gir.so
@@ -245,6 +261,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_kde_services.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_metainfo.so
 %attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_nm.so
+%if %{with ostree}
+%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_ostree.so
+%endif
 %{_mandir}/man1/appstream-builder.1*
 
 %files -n appstream-builder-devel
