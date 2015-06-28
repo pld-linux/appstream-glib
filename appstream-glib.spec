@@ -6,12 +6,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.3.6
+Version:	0.4.0
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	854085e5216120b9843d680e97f1fb63
+# Source0-md5:	f3bf922874fe106b55dbb4c7dec0bc9c
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
@@ -189,7 +189,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/asb-plugins/lib*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/asb-plugins-2/lib*.{la,a}
 
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libappstream-*.la
@@ -242,27 +242,27 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libappstream-builder.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.7
 %{_libdir}/girepository-1.0/AppStreamBuilder-1.0.typelib
-%dir %{_libdir}/asb-plugins
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_absorb.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_appdata.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_blacklist.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_dbus.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_desktop.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_firmware.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_font.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gettext.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gir.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gresource.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_gstreamer.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_hardcoded.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_ibus_sql.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_ibus_xml.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_kde_notifyrc.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_kde_services.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_metainfo.so
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_nm.so
+%dir %{_libdir}/asb-plugins-2
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_absorb.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_appdata.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_blacklist.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_dbus.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_desktop.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_firmware.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_font.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_gettext.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_gir.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_gresource.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_gstreamer.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_hardcoded.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_ibus_sql.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_ibus_xml.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_kde_notifyrc.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_kde_services.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_metainfo.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_nm.so
 %if %{with ostree}
-%attr(755,root,root) %{_libdir}/asb-plugins/libasb_plugin_ostree.so
+%attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_ostree.so
 %endif
 %{_mandir}/man1/appstream-builder.1*
 
