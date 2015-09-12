@@ -6,12 +6,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.4.0
+Version:	0.5.0
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	f3bf922874fe106b55dbb4c7dec0bc9c
+# Source0-md5:	fe6ed74576bfff0d4071b97c104b9649
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
@@ -211,7 +211,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/appdata-validate
 %attr(755,root,root) %{_bindir}/appstream-util
 %attr(755,root,root) %{_libdir}/libappstream-glib.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libappstream-glib.so.7
+%attr(755,root,root) %ghost %{_libdir}/libappstream-glib.so.8
 %{_libdir}/girepository-1.0/AppStreamGlib-1.0.typelib
 %{_aclocaldir}/appdata-xml.m4
 %{_mandir}/man1/appstream-util.1*
@@ -240,7 +240,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/appstream-builder
 %attr(755,root,root) %{_libdir}/libappstream-builder.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.7
+%attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.8
 %{_libdir}/girepository-1.0/AppStreamBuilder-1.0.typelib
 %dir %{_libdir}/asb-plugins-2
 %attr(755,root,root) %{_libdir}/asb-plugins-2/libasb_plugin_absorb.so
