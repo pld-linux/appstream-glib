@@ -6,12 +6,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.5.0
+Version:	0.5.1
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	fe6ed74576bfff0d4071b97c104b9649
+# Source0-md5:	51584924fb0d33254433ef495348b58e
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
@@ -24,16 +24,16 @@ BuildRequires:	fontconfig-devel
 # pkgconfig(freetype2) >= 9.10.0
 BuildRequires:	freetype-devel >= 1:2.2.1
 BuildRequires:	gcab
-BuildRequires:	gdk-pixbuf2-devel >= 2.14
+BuildRequires:	gdk-pixbuf2-devel >= 2.31.5
 BuildRequires:	gettext-tools >= 0.17
-BuildRequires:	glib2-devel >= 1:2.16.1
+BuildRequires:	glib2-devel >= 1:2.45.8
 BuildRequires:	gobject-introspection-devel >= 0.9.8
 BuildRequires:	gperf
 BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	intltool >= 0.40.0
 BuildRequires:	libarchive-devel
-BuildRequires:	libsoup-devel >= 2.24
+BuildRequires:	libsoup-devel >= 2.52
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libxslt-progs
@@ -45,9 +45,9 @@ BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	yaml-devel
-Requires:	glib2 >= 1:2.16.1
-Requires:	gdk-pixbuf2 >= 2.14
-Requires:	libsoup >= 2.24
+Requires:	glib2 >= 1:2.45.8
+Requires:	gdk-pixbuf2 >= 2.31.5
+Requires:	libsoup >= 2.52
 Provides:	appdata-tools = %{version}
 Obsoletes:	appdata-tools < 0.2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -69,8 +69,8 @@ Summary:	Header files for appstream-glib library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki appstream-glib
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gdk-pixbuf2-devel >= 2.14
-Requires:	glib2-devel >= 1:2.16.1
+Requires:	gdk-pixbuf2-devel >= 2.31.5
+Requires:	glib2-devel >= 1:2.45.8
 
 %description devel
 Header files for appstream-glib library.
