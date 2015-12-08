@@ -2,12 +2,12 @@
 # Conditional build:
 %bcond_without	ostree	# ostree support
 %bcond_with	alpm	# Arch Linux PacMan support
-#
+
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
 Version:	0.5.4
-Release:	1
+Release:	2
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
@@ -29,8 +29,8 @@ BuildRequires:	gettext-tools >= 0.17
 BuildRequires:	glib2-devel >= 1:2.45.8
 BuildRequires:	gobject-introspection-devel >= 0.9.8
 BuildRequires:	gperf
-BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	gtk+3-devel >= 3.0
+BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	intltool >= 0.40.0
 BuildRequires:	libarchive-devel
 BuildRequires:	libsoup-devel >= 2.52
@@ -45,8 +45,8 @@ BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	yaml-devel
-Requires:	glib2 >= 1:2.45.8
 Requires:	gdk-pixbuf2 >= 2.31.5
+Requires:	glib2 >= 1:2.45.8
 Requires:	libsoup >= 2.52
 Provides:	appdata-tools = %{version}
 Obsoletes:	appdata-tools < 0.2
@@ -94,6 +94,9 @@ Statyczna biblioteka appstream-glib.
 Summary:	appstream-glib API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki appstream-glib
 Group:		Documentation
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description apidocs
 API documentation for appstream-glib library.
@@ -229,7 +232,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n bash-completion-appstream-glib
 %defattr(644,root,root,755)
-%{_datadir}/bash-completion/completions/appstream-util
+%{bash_compdir}/appstream-util
 
 %files apidocs
 %defattr(644,root,root,755)
@@ -273,4 +276,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n bash-completion-appstream-builder
 %defattr(644,root,root,755)
-%{_datadir}/bash-completion/completions/appstream-builder
+%{bash_compdir}/appstream-builder
