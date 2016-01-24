@@ -1,17 +1,16 @@
 #
 # Conditional build:
-%bcond_without	ostree	# ostree support
 %bcond_with	alpm	# Arch Linux PacMan support
 
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.5.5
+Version:	0.5.7
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	acfe164c5f6cb8edecc6c99345a5d390
+# Source0-md5:	18d78689c293791964b6fd83bb48ca03
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
@@ -36,8 +35,8 @@ BuildRequires:	libarchive-devel
 BuildRequires:	libsoup-devel >= 2.52
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2
+BuildRequires:	libuuid-devel
 BuildRequires:	libxslt-progs
-%{?with_ostree:BuildRequires:	ostree-devel >= 2015.1}
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-devel >= 4.5
@@ -69,8 +68,11 @@ Summary:	Header files for appstream-glib library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki appstream-glib
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	gcab-devel
 Requires:	gdk-pixbuf2-devel >= 2.31.5
 Requires:	glib2-devel >= 1:2.45.8
+Requires:	libarchive-devel
+Requires:	libuuid-devel
 
 %description devel
 Header files for appstream-glib library.
@@ -181,7 +183,6 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 %{__automake}
 %configure \
 	%{?with_alpm:--enable-alpm} \
-	%{!?with_ostree:--disable-ostree} \
 	--disable-silent-rules \
 	--with-html-dir=%{_gtkdocdir}
 %{__make}
@@ -192,7 +193,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/asb-plugins-4/lib*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/asb-plugins-5/lib*.{la,a}
+
+# already in gettext-tools >= 0.19.7
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/gettext/its/appdata.{its,loc}
 
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libappstream-*.la
@@ -211,11 +215,13 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS MAINTAINERS NEWS README.md
+%attr(755,root,root) %{_bindir}/appstream-compose
 %attr(755,root,root) %{_bindir}/appstream-util
 %attr(755,root,root) %{_libdir}/libappstream-glib.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libappstream-glib.so.8
 %{_libdir}/girepository-1.0/AppStreamGlib-1.0.typelib
 %{_aclocaldir}/appdata-xml.m4
+%{_mandir}/man1/appstream-compose.1*
 %{_mandir}/man1/appstream-util.1*
 
 %files devel
@@ -244,23 +250,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libappstream-builder.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.8
 %{_libdir}/girepository-1.0/AppStreamBuilder-1.0.typelib
-%dir %{_libdir}/asb-plugins-4
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_absorb.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_appdata.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_dbus.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_desktop.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_font.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_gettext.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_gir.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_gresource.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_gstreamer.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_hardcoded.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_kde_notifyrc.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_kde_services.so
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_nm.so
-%if %{with ostree}
-%attr(755,root,root) %{_libdir}/asb-plugins-4/libasb_plugin_ostree.so
-%endif
+%dir %{_libdir}/asb-plugins-5
+%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_absorb.so
+%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_appdata.so
+%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_dbus.so
+%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_desktop.so
+%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_font.so
+%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_gettext.so
+%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_hardcoded.so
 %{_mandir}/man1/appstream-builder.1*
 
 %files -n appstream-builder-devel
