@@ -5,12 +5,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.5.7
+Version:	0.5.9
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	18d78689c293791964b6fd83bb48ca03
+# Source0-md5:	e423da80b3bda1ecea02ea57dc459c41
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
@@ -253,7 +253,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/asb-plugins-5
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_absorb.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_appdata.so
-%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_dbus.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_desktop.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_font.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_gettext.so
