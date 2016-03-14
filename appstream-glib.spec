@@ -5,12 +5,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.5.9
+Version:	0.5.11
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	e423da80b3bda1ecea02ea57dc459c41
+# Source0-md5:	01daa1454961407c7e5205895634d8d6
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		http://people.freedesktop.org/~hughsient/appstream-glib/
@@ -31,6 +31,7 @@ BuildRequires:	gperf
 BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	intltool >= 0.40.0
+BuildRequires:	json-glib-devel >= 1.1.1
 BuildRequires:	libarchive-devel
 BuildRequires:	libsoup-devel >= 2.52
 BuildRequires:	libstdc++-devel
@@ -46,6 +47,7 @@ BuildRequires:	xz
 BuildRequires:	yaml-devel
 Requires:	gdk-pixbuf2 >= 2.31.5
 Requires:	glib2 >= 1:2.45.8
+Requires:	json-glib >= 1.1.1
 Requires:	libsoup >= 2.52
 Provides:	appdata-tools = %{version}
 Obsoletes:	appdata-tools < 0.2
@@ -257,6 +259,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_font.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_gettext.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_hardcoded.so
+%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_shell_extension.so
 %{_mandir}/man1/appstream-builder.1*
 
 %files -n appstream-builder-devel
