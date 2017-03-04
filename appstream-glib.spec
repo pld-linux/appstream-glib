@@ -1,16 +1,17 @@
 #
 # Conditional build:
 %bcond_with	alpm	# Arch Linux PacMan support
+%bcond_with	stemmer	# search stemmer based on libstemmer
 
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.5.16
+Version:	0.6.9
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	f02ef07ddd24d2b4e10dcd1d3f892d79
+# Source0-md5:	075daf7f903d2355e0c133ac41dcbced
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-pc.patch
 URL:		https://people.freedesktop.org/~hughsient/appstream-glib/
@@ -23,8 +24,9 @@ BuildRequires:	fontconfig-devel
 # pkgconfig(freetype2) >= 9.10.0
 BuildRequires:	freetype-devel >= 1:2.2.1
 BuildRequires:	gcab-devel
+BuildRequires:	gcc >= 5:3.2
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.5
-BuildRequires:	gettext-tools >= 0.17
+BuildRequires:	gettext-tools >= 0.19.7
 BuildRequires:	glib2-devel >= 1:2.45.8
 BuildRequires:	gobject-introspection-devel >= 0.9.8
 BuildRequires:	gperf
@@ -35,6 +37,7 @@ BuildRequires:	json-glib-devel >= 1.1.1
 BuildRequires:	libarchive-devel
 BuildRequires:	libsoup-devel >= 2.52
 BuildRequires:	libstdc++-devel
+%{?with_stemmer:BuildRequires:	libstemmer-devel}
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libuuid-devel
 BuildRequires:	libxslt-progs
@@ -183,9 +186,11 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
+%{?with_stemmer:CPPFLAGS="%{rpmcppflags} -I/usr/include/libstemmer"}
 %configure \
 	%{?with_alpm:--enable-alpm} \
 	--disable-silent-rules \
+	%{?with_stemmer:--enable-stemmer} \
 	--with-html-dir=%{_gtkdocdir}
 %{__make}
 
@@ -253,7 +258,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.8
 %{_libdir}/girepository-1.0/AppStreamBuilder-1.0.typelib
 %dir %{_libdir}/asb-plugins-5
-%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_absorb.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_appdata.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_desktop.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_font.so
