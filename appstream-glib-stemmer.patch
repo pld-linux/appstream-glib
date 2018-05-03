@@ -1,0 +1,11 @@
+--- appstream-glib-0.7.8/libappstream-glib/as-stemmer.c~	2018-04-20 12:37:25.000000000 +0200
++++ appstream-glib-0.7.8/libappstream-glib/as-stemmer.c	2018-05-03 10:32:44.101157231 +0200
+@@ -24,7 +24,7 @@
+ #include <glib/gi18n.h>
+ 
+ #ifdef HAVE_LIBSTEMMER
+-  #include "libstemmer.h"
++  #include "libstemmer/libstemmer.h"
+ #endif
+ 
+ #include "as-stemmer.h"
