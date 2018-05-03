@@ -6,14 +6,14 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.6.13
+Version:	0.7.8
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	2122471fff15bb9421313d2110ce538a
+# Source0-md5:	785eff9569aa7fb8838c43f44a1da4aa
 Patch0:		%{name}-rpm5.patch
-Patch1:		%{name}-pc.patch
+Patch1:		%{name}-stemmer.patch
 URL:		https://people.freedesktop.org/~hughsient/appstream-glib/
 %{?with_alpm:BuildRequires:	alpm-devel}
 BuildRequires:	autoconf >= 2.63
@@ -41,6 +41,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libuuid-devel
 BuildRequires:	libxslt-progs
+BuildRequires:	meson
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-devel >= 4.5
@@ -181,32 +182,20 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 %patch1 -p1
 
 %build
-%{__libtoolize}
-%{__aclocal} -I m4
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-%{?with_stemmer:CPPFLAGS="%{rpmcppflags} -I/usr/include/libstemmer"}
-%configure \
-	%{?with_alpm:--enable-alpm} \
-	--disable-silent-rules \
-	%{?with_stemmer:--enable-stemmer} \
-	--with-html-dir=%{_gtkdocdir}
-%{__make}
+%meson build \
+	-Denable-alpm=%{__true_false aplm} \
+	-Denable-stemmer=%{__true_false stemmer} \
+	-Dgtk-doc=true
+
+%meson_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
-
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/asb-plugins-5/lib*.{la,a}
+%meson_install -C build
 
 # already in gettext-tools >= 0.19.7
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/gettext/its/appdata.{its,loc}
-
-# obsoleted by pkg-config
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libappstream-*.la
 
 %find_lang %{name}
 
@@ -239,9 +228,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir}/appstream-glib.pc
 %{_aclocaldir}/appstream-xml.m4
 
+%if 0
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libappstream-glib.a
+%endif
 
 %files -n bash-completion-appstream-glib
 %defattr(644,root,root,755)
@@ -273,9 +264,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gir-1.0/AppStreamBuilder-1.0.gir
 %{_pkgconfigdir}/appstream-builder.pc
 
+%if 0
 %files -n appstream-builder-static
 %defattr(644,root,root,755)
 %{_libdir}/libappstream-builder.a
+%endif
 
 %files -n bash-completion-appstream-builder
 %defattr(644,root,root,755)
