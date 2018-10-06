@@ -1,29 +1,29 @@
 #
 # Conditional build:
-%bcond_with	alpm	# Arch Linux PacMan support
-%bcond_with	stemmer	# search stemmer based on libstemmer
+%bcond_with	alpm		# Arch Linux PacMan support
+%bcond_with	stemmer		# search stemmer based on libstemmer
+%bcond_without	static_libs	# static libraries
 
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.7.8
+Version:	0.7.13
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	785eff9569aa7fb8838c43f44a1da4aa
+# Source0-md5:	f262a36c4230596ccca0c9697cb8cc7d
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-stemmer.patch
+Patch2:		%{name}-pc.patch
 URL:		https://people.freedesktop.org/~hughsient/appstream-glib/
 %{?with_alpm:BuildRequires:	alpm-devel}
-BuildRequires:	autoconf >= 2.63
-BuildRequires:	automake >= 1:1.9
 BuildRequires:	docbook-dtd43-xml
 BuildRequires:	docbook-style-xsl
 BuildRequires:	fontconfig-devel
 # pkgconfig(freetype2) >= 9.10.0
 BuildRequires:	freetype-devel >= 1:2.2.1
-BuildRequires:	gcab-devel
+BuildRequires:	gcab-devel >= 1.0
 BuildRequires:	gcc >= 5:3.2
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.5
 BuildRequires:	gettext-tools >= 0.19.7
@@ -33,25 +33,24 @@ BuildRequires:	gperf
 BuildRequires:	gtk+3-devel >= 3.0
 BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	intltool >= 0.40.0
-BuildRequires:	json-glib-devel >= 1.1.1
+BuildRequires:	json-glib-devel >= 1.1.2
 BuildRequires:	libarchive-devel
 BuildRequires:	libsoup-devel >= 2.52
 BuildRequires:	libstdc++-devel
 %{?with_stemmer:BuildRequires:	libstemmer-devel}
-BuildRequires:	libtool >= 2:2
 BuildRequires:	libuuid-devel
 BuildRequires:	libxslt-progs
-BuildRequires:	meson
+BuildRequires:	meson >= 0.37.0
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-devel >= 4.5
 BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
-BuildRequires:	yaml-devel
+BuildRequires:	yaml-devel >= 0.1
 Requires:	gdk-pixbuf2 >= 2.31.5
 Requires:	glib2 >= 1:2.45.8
-Requires:	json-glib >= 1.1.1
+Requires:	json-glib >= 1.1.2
 Requires:	libsoup >= 2.52
 Provides:	appdata-tools = %{version}
 Obsoletes:	appdata-tools < 0.2
@@ -74,7 +73,7 @@ Summary:	Header files for appstream-glib library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki appstream-glib
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gcab-devel
+Requires:	gcab-devel >= 1.0
 Requires:	gdk-pixbuf2-devel >= 2.31.5
 Requires:	glib2-devel >= 1:2.45.8
 Requires:	libarchive-devel
@@ -180,11 +179,18 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+
+%if %{with static_libs}
+%{__sed} -i -e 's/shared_library/library/' libappstream-{builder,glib}/meson.build
+%endif
 
 %build
+# for off64_t
+CPPFLAGS="%{rpmcppflags} -D_LARGEFILE64_SOURCE"
 %meson build \
-	-Denable-alpm=%{__true_false aplm} \
-	-Denable-stemmer=%{__true_false stemmer} \
+	-Dalpm=%{__true_false aplm} \
+	-Dstemmer=%{__true_false stemmer} \
 	-Dgtk-doc=true
 
 %meson_build -C build
@@ -228,7 +234,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir}/appstream-glib.pc
 %{_aclocaldir}/appstream-xml.m4
 
-%if 0
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libappstream-glib.a
@@ -254,6 +260,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_font.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_gettext.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_hardcoded.so
+%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_icon.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_shell_extension.so
 %{_mandir}/man1/appstream-builder.1*
 
@@ -264,7 +271,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gir-1.0/AppStreamBuilder-1.0.gir
 %{_pkgconfigdir}/appstream-builder.pc
 
-%if 0
+%if %{with static_libs}
 %files -n appstream-builder-static
 %defattr(644,root,root,755)
 %{_libdir}/libappstream-builder.a
