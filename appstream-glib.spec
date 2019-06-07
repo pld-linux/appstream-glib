@@ -7,15 +7,14 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.7.14
+Version:	0.7.15
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	48811c1105ce8b37ac274c6bf101075b
+# Source0-md5:	51f15108d6b9224f2ce2cf9364403b10
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-stemmer.patch
-Patch2:		%{name}-pc.patch
 URL:		https://people.freedesktop.org/~hughsient/appstream-glib/
 %{?with_alpm:BuildRequires:	alpm-devel}
 BuildRequires:	docbook-dtd43-xml
@@ -78,6 +77,8 @@ Requires:	gdk-pixbuf2-devel >= 2.31.5
 Requires:	glib2-devel >= 1:2.45.8
 Requires:	libarchive-devel
 Requires:	libuuid-devel
+Obsoletes:	appstream-builder-devel < 0.7.15
+Obsoletes:	appstream-builder-static < 0.7.15
 
 %description devel
 Header files for appstream-glib library.
@@ -137,31 +138,6 @@ AppStreamBuilder library to create AppStream metadata from packages.
 %description -n appstream-builder -l pl.UTF-8
 Biblioteka AppStreamBuilder tworząca metadane AppStream z pakietów.
 
-%package -n appstream-builder-devel
-Summary:	Header files for AppStreamBuilder library
-Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki AppStreamBuilder
-Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
-Requires:	appstream-builder = %{version}-%{release}
-
-%description -n appstream-builder-devel
-Header files for AppStreamBuilder library.
-
-%description -n appstream-builder-devel -l pl.UTF-8
-Pliki nagłówkowe biblioteki AppStreamBuilder.
-
-%package -n appstream-builder-static
-Summary:	Static AppStreamBuilder library
-Summary(pl.UTF-8):	Statyczna biblioteka AppStreamBuilder
-Group:		Development/Libraries
-Requires:	appstream-builder-devel = %{version}-%{release}
-
-%description -n appstream-builder-static
-Static AppStreamBuilder library.
-
-%description -n appstream-builder-static -l pl.UTF-8
-Statyczna biblioteka AppStreamBuilder.
-
 %package -n bash-completion-appstream-builder
 Summary:	Bash completion for appstream-builder package
 Summary(pl.UTF-8):	Bashowe dopełnianie składni dla pakietu appstream-builder
@@ -179,10 +155,9 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %if %{with static_libs}
-%{__sed} -i -e 's/shared_library/library/' libappstream-{builder,glib}/meson.build
+%{__sed} -i -e 's/shared_library/library/' libappstream-glib/meson.build
 %endif
 
 %build
@@ -210,9 +185,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
-
-%post	-n appstream-builder -p /sbin/ldconfig
-%postun	-n appstream-builder -p /sbin/ldconfig
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
@@ -251,9 +223,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n appstream-builder
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/appstream-builder
-%attr(755,root,root) %{_libdir}/libappstream-builder.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libappstream-builder.so.8
-%{_libdir}/girepository-1.0/AppStreamBuilder-1.0.typelib
 %dir %{_libdir}/asb-plugins-5
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_appdata.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_desktop.so
@@ -263,19 +232,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_icon.so
 %attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_shell_extension.so
 %{_mandir}/man1/appstream-builder.1*
-
-%files -n appstream-builder-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libappstream-builder.so
-%{_includedir}/libappstream-builder
-%{_datadir}/gir-1.0/AppStreamBuilder-1.0.gir
-%{_pkgconfigdir}/appstream-builder.pc
-
-%if %{with static_libs}
-%files -n appstream-builder-static
-%defattr(644,root,root,755)
-%{_libdir}/libappstream-builder.a
-%endif
 
 %files -n bash-completion-appstream-builder
 %defattr(644,root,root,755)

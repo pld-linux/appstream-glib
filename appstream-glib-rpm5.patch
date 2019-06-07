@@ -1,3 +1,15 @@
+--- appstream-glib-0.7.15/libappstream-glib/as-utils.c.orig	2019-02-28 13:26:26.000000000 +0100
++++ appstream-glib-0.7.15/libappstream-glib/as-utils.c	2019-06-07 21:39:27.631669049 +0200
+@@ -27,7 +27,8 @@
+ #include <uuid.h>
+ 
+ #ifdef HAVE_RPM
+-#include <rpm/rpmlib.h>
++#include <rpm/rpmutil.h>
++#include <rpm/rpmevr.h>
+ #endif
+ 
+ #include "as-app-private.h"
 --- appstream-glib-0.6.9/libappstream-builder/asb-package-rpm.c.orig	2016-11-30 11:07:39.000000000 +0100
 +++ appstream-glib-0.6.9/libappstream-builder/asb-package-rpm.c	2017-03-04 07:59:10.334045621 +0100
 @@ -33,7 +33,7 @@
