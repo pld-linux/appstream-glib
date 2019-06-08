@@ -5,7 +5,7 @@
  
  #ifdef HAVE_RPM
 -#include <rpm/rpmlib.h>
-+#include <rpm/rpmutil.h>
++#include <rpm/rpmio.h>
 +#include <rpm/rpmevr.h>
  #endif
  
