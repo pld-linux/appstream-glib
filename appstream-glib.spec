@@ -7,12 +7,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.7.15
-Release:	2
+Version:	0.7.17
+Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	51f15108d6b9224f2ce2cf9364403b10
+# Source0-md5:	67d441fb0fb3e14551b47db656565fc4
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-stemmer.patch
 URL:		https://people.freedesktop.org/~hughsient/appstream-glib/
@@ -26,7 +26,7 @@ BuildRequires:	gcab-devel >= 1.0
 BuildRequires:	gcc >= 5:3.2
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.5
 BuildRequires:	gettext-tools >= 0.19.7
-BuildRequires:	glib2-devel >= 1:2.45.8
+BuildRequires:	glib2-devel >= 1:2.58.0
 BuildRequires:	gobject-introspection-devel >= 0.9.8
 BuildRequires:	gperf
 BuildRequires:	gtk+3-devel >= 3.0
@@ -40,15 +40,17 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libuuid-devel
 BuildRequires:	libxslt-progs
 BuildRequires:	meson >= 0.37.0
+BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-devel >= 4.5
+BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	yaml-devel >= 0.1
 Requires:	gdk-pixbuf2 >= 2.31.5
-Requires:	glib2 >= 1:2.45.8
+Requires:	glib2 >= 1:2.58.0
 Requires:	json-glib >= 1.1.2
 Requires:	libsoup >= 2.52
 Provides:	appdata-tools = %{version}
@@ -74,7 +76,7 @@ Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	gcab-devel >= 1.0
 Requires:	gdk-pixbuf2-devel >= 2.31.5
-Requires:	glib2-devel >= 1:2.45.8
+Requires:	glib2-devel >= 1:2.58.0
 Requires:	libarchive-devel
 Requires:	libuuid-devel
 Obsoletes:	appstream-builder-devel < 0.7.15
@@ -102,7 +104,7 @@ Statyczna biblioteka appstream-glib.
 Summary:	appstream-glib API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki appstream-glib
 Group:		Documentation
-%if "%{_rpmversion}" >= "5"
+%if "%{_rpmversion}" >= "4.6"
 BuildArch:	noarch
 %endif
 
@@ -175,6 +177,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %meson_install -C build
 
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/installed-tests
 # already in gettext-tools >= 0.19.7
 %{__rm} $RPM_BUILD_ROOT%{_datadir}/gettext/its/appdata.{its,loc}
 
