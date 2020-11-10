@@ -155,7 +155,9 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 
 %prep
 %setup -q
+%if "%(rpm -q --qf '%{V}' rpm-devel | cut -f1 -d.)" == "5"
 %patch0 -p1
+%endif
 %patch1 -p1
 
 %if %{with static_libs}
