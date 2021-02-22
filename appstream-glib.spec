@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_with	alpm		# Arch Linux PacMan support
+%bcond_with	rpm5		# build with rpm5
 %bcond_with	stemmer		# search stemmer based on libstemmer
 %bcond_without	static_libs	# static libraries
 
@@ -8,7 +9,7 @@ Summary:	GLib Objects and helper methods for reading and writing AppStream metad
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
 Version:	0.7.17
-Release:	1
+Release:	2
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
@@ -104,9 +105,7 @@ Statyczna biblioteka appstream-glib.
 Summary:	appstream-glib API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki appstream-glib
 Group:		Documentation
-%if "%{_rpmversion}" >= "4.6"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description apidocs
 API documentation for appstream-glib library.
@@ -155,9 +154,7 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 
 %prep
 %setup -q
-%if "%(rpm -q --qf '%{V}' rpm-devel | cut -f1 -d.)" == "5"
-%patch0 -p1
-%endif
+%{?with_rpm5:%patch0 -p1}
 %patch1 -p1
 
 %if %{with static_libs}
