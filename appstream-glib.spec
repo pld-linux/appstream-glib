@@ -105,7 +105,7 @@ Statyczna biblioteka appstream-glib.
 Summary:	appstream-glib API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki appstream-glib
 Group:		Documentation
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description apidocs
 API documentation for appstream-glib library.
