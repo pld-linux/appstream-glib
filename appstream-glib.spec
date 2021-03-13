@@ -1,19 +1,19 @@
 #
 # Conditional build:
 %bcond_with	alpm		# Arch Linux PacMan support
-%bcond_with	rpm5		# build with rpm5
+%bcond_with	rpm5		# rpm5 fork instead of rpm.org
 %bcond_with	stemmer		# search stemmer based on libstemmer
 %bcond_without	static_libs	# static libraries
 
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.7.17
-Release:	2
+Version:	0.7.18
+Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	67d441fb0fb3e14551b47db656565fc4
+# Source0-md5:	25c1d7f218fdb5f472fa31858742dfcd
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-stemmer.patch
 URL:		https://people.freedesktop.org/~hughsient/appstream-glib/
@@ -44,7 +44,12 @@ BuildRequires:	meson >= 0.37.0
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
-BuildRequires:	rpm-devel >= 4.5
+BuildRequires:	rpm-build >= 4.6
+%if %{with rpm5}
+BuildRequires:	rpm-devel >= 5.0
+%else
+BuildRequires:	rpm-devel >= 1:4.6
+%endif
 BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	tar >= 1:1.22
