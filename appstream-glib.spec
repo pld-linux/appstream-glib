@@ -8,16 +8,17 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.7.18
-Release:	2
+Version:	0.8.2
+Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	25c1d7f218fdb5f472fa31858742dfcd
+# Source0-md5:	bf2f1610c2c5b734b6fa82b9319ef26c
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-stemmer.patch
 URL:		https://people.freedesktop.org/~hughsient/appstream-glib/
 %{?with_alpm:BuildRequires:	alpm-devel}
+BuildRequires:	curl-devel >= 7.56.0
 BuildRequires:	docbook-dtd43-xml
 BuildRequires:	docbook-style-xsl
 BuildRequires:	fontconfig-devel
@@ -35,12 +36,11 @@ BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	intltool >= 0.40.0
 BuildRequires:	json-glib-devel >= 1.1.2
 BuildRequires:	libarchive-devel
-BuildRequires:	libsoup-devel >= 2.52
 BuildRequires:	libstdc++-devel
 %{?with_stemmer:BuildRequires:	libstemmer-devel}
 BuildRequires:	libuuid-devel
 BuildRequires:	libxslt-progs
-BuildRequires:	meson >= 0.37.0
+BuildRequires:	meson >= 0.46.0
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
@@ -58,7 +58,6 @@ BuildRequires:	yaml-devel >= 0.1
 Requires:	gdk-pixbuf2 >= 2.31.5
 Requires:	glib2 >= 1:2.58.0
 Requires:	json-glib >= 1.1.2
-Requires:	libsoup >= 2.52
 Provides:	appdata-tools = %{version}
 Obsoletes:	appdata-tools < 0.2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -80,11 +79,18 @@ Summary:	Header files for appstream-glib library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki appstream-glib
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	curl-devel >= 7.56.0
 Requires:	gcab-devel >= 1.0
 Requires:	gdk-pixbuf2-devel >= 2.31.5
 Requires:	glib2-devel >= 1:2.58.0
 Requires:	libarchive-devel
 Requires:	libuuid-devel
+Requires:	yaml-devel >= 0.1
+%if %{with rpm5}
+Requires:	rpm-devel >= 5.0
+%else
+Requires:	rpm-devel >= 1:4.6
+%endif
 Obsoletes:	appstream-builder-devel < 0.7.15
 Obsoletes:	appstream-builder-static < 0.7.15
 
