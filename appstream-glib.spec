@@ -2,20 +2,18 @@
 # Conditional build:
 %bcond_with	alpm		# Arch Linux PacMan support
 %bcond_with	rpm5		# rpm5 fork instead of rpm.org
-%bcond_with	stemmer		# search stemmer based on libstemmer
 %bcond_without	static_libs	# static libraries
 
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.8.2
+Version:	0.8.3
 Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	bf2f1610c2c5b734b6fa82b9319ef26c
+# Source0-md5:	2ffd46eff1c16f31e435849b706c2287
 Patch0:		%{name}-rpm5.patch
-Patch1:		%{name}-stemmer.patch
 URL:		https://people.freedesktop.org/~hughsient/appstream-glib/
 %{?with_alpm:BuildRequires:	alpm-devel}
 BuildRequires:	curl-devel >= 7.56.0
@@ -37,7 +35,6 @@ BuildRequires:	intltool >= 0.40.0
 BuildRequires:	json-glib-devel >= 1.1.2
 BuildRequires:	libarchive-devel
 BuildRequires:	libstdc++-devel
-%{?with_stemmer:BuildRequires:	libstemmer-devel}
 BuildRequires:	libuuid-devel
 BuildRequires:	libxslt-progs
 BuildRequires:	meson >= 0.46.0
@@ -166,7 +163,6 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 %prep
 %setup -q
 %{?with_rpm5:%patch0 -p1}
-%patch1 -p1
 
 %if %{with static_libs}
 %{__sed} -i -e 's/shared_library/library/' libappstream-glib/meson.build
@@ -177,7 +173,6 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 CPPFLAGS="%{rpmcppflags} -D_LARGEFILE64_SOURCE"
 %meson build \
 	-Dalpm=%{__true_false aplm} \
-	-Dstemmer=%{__true_false stemmer} \
 	-Dgtk-doc=true
 
 %meson_build -C build
