@@ -8,7 +8,7 @@ Summary:	GLib Objects and helper methods for reading and writing AppStream metad
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
 Version:	0.8.3
-Release:	1
+Release:	2
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
@@ -171,16 +171,16 @@ Bashowe dopełnianie składni polecenia appstream-builder.
 %build
 # for off64_t
 CPPFLAGS="%{rpmcppflags} -D_LARGEFILE64_SOURCE"
-%meson build \
+%meson \
 	-Dalpm=%{__true_false aplm} \
 	-Dgtk-doc=true
 
-%meson_build -C build
+%meson_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%meson_install -C build
+%meson_install
 
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/installed-tests
 # already in gettext-tools >= 0.19.7
