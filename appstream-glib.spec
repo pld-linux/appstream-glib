@@ -47,7 +47,7 @@ BuildRequires:	rpm-devel >= 5.0
 %else
 BuildRequires:	rpm-devel >= 1:4.6
 %endif
-BuildRequires:	rpmbuild(macros) >= 1.736
+BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
