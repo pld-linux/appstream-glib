@@ -7,12 +7,12 @@
 Summary:	GLib Objects and helper methods for reading and writing AppStream metadata
 Summary(pl.UTF-8):	Obiekty GLiba i metody pomocnicze do odczytu i zapisu metadanych AppStream
 Name:		appstream-glib
-Version:	0.8.3
-Release:	2
+Version:	0.8.4
+Release:	1
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	https://people.freedesktop.org/~hughsient/appstream-glib/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	2ffd46eff1c16f31e435849b706c2287
+# Source0-md5:	e13816aed749622edc5abe1ca2cdd3ed
 Patch0:		%{name}-rpm5.patch
 URL:		https://people.freedesktop.org/~hughsient/appstream-glib/
 %{?with_alpm:BuildRequires:	alpm-devel}
@@ -126,7 +126,7 @@ Summary:	Bash completion for appstream-glib package
 Summary(pl.UTF-8):	Bashowe dopełnianie składni dla pakietu appstream-glib
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
-Requires:	bash-completion >= 2.0
+Requires:	bash-completion >= 1:2.0
 
 %description -n bash-completion-appstream-glib
 Bash completion for appstream-util command.
@@ -152,7 +152,7 @@ Summary:	Bash completion for appstream-builder package
 Summary(pl.UTF-8):	Bashowe dopełnianie składni dla pakietu appstream-builder
 Group:		Applications/Shells
 Requires:	appstream-builder = %{version}-%{release}
-Requires:	bash-completion >= 2.0
+Requires:	bash-completion >= 1:2.0
 
 %description -n bash-completion-appstream-builder
 Bash completion for appstream-builder command.
@@ -199,8 +199,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS MAINTAINERS NEWS README.md
 %attr(755,root,root) %{_bindir}/appstream-compose
 %attr(755,root,root) %{_bindir}/appstream-util
-%attr(755,root,root) %{_libdir}/libappstream-glib.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libappstream-glib.so.8
+%{_libdir}/libappstream-glib.so.*.*.*
+%ghost %{_libdir}/libappstream-glib.so.8
 %{_libdir}/girepository-1.0/AppStreamGlib-1.0.typelib
 %{_aclocaldir}/appdata-xml.m4
 %{_mandir}/man1/appstream-compose.1*
@@ -208,7 +208,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libappstream-glib.so
+%{_libdir}/libappstream-glib.so
 %{_datadir}/gir-1.0/AppStreamGlib-1.0.gir
 %{_includedir}/libappstream-glib
 %{_pkgconfigdir}/appstream-glib.pc
@@ -232,13 +232,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/appstream-builder
 %dir %{_libdir}/asb-plugins-5
-%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_appdata.so
-%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_desktop.so
-%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_font.so
-%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_gettext.so
-%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_hardcoded.so
-%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_icon.so
-%attr(755,root,root) %{_libdir}/asb-plugins-5/libasb_plugin_shell_extension.so
+%{_libdir}/asb-plugins-5/libasb_plugin_appdata.so
+%{_libdir}/asb-plugins-5/libasb_plugin_desktop.so
+%{_libdir}/asb-plugins-5/libasb_plugin_font.so
+%{_libdir}/asb-plugins-5/libasb_plugin_gettext.so
+%{_libdir}/asb-plugins-5/libasb_plugin_hardcoded.so
+%{_libdir}/asb-plugins-5/libasb_plugin_icon.so
+%{_libdir}/asb-plugins-5/libasb_plugin_shell_extension.so
 %{_mandir}/man1/appstream-builder.1*
 
 %files -n bash-completion-appstream-builder
